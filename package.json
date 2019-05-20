@@ -1,0 +1,29 @@
+{
+  "name": "jsdeploy",
+  "version": "0.0.1",
+  "description": "",
+  "bin": {
+    "jsdeploy": "bin/jsdeploy.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuyuedefeng/jsdeploy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wuyuedefeng/jsdeploy/issues"
+  },
+  "homepage": "https://github.com/wuyuedefeng/jsdeploy#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "fs-extra": "^8.0.1",
+    "nunjucks": "^3.2.0",
+    "promptly": "^3.0.3",
+    "shelljs": "^0.8.3"
+  }
+}
