@@ -1,4 +1,4 @@
 package-lock.json
 node_modules
 .idea/
-deploy.config.js
+deploy.config.json
