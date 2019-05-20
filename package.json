@@ -22,8 +22,10 @@
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
     "fs-extra": "^8.0.1",
+    "node-ssh": "^6.0.0",
     "nunjucks": "^3.2.0",
     "promptly": "^3.0.3",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "tmp-promise": "^1.1.0"
   }
 }

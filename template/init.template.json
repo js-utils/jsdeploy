@@ -1,21 +1,16 @@
-export default {
-  default: {
-    workspace: 'your local project clone path [if not config will use tmp path every time]',
-    deployTo: '/server-project-path',
-    repositoryUrl: 'git://...',
-    keepReleases: 8,
-    only: null,
-    ignores: [],
-    shared: {
-      dirs: ['node_modules'],
-      files: ['pm2.config.json']
-    },
-    staging: {
-      servers: [{
-        host: '',
-        user: ''
-      }],
-      branch: 'develop'
-    }
+{
+  "default": {
+    "workspace": "your local project clone path [if not config will use tmp path every time]",
+    "deployTo": "/mnt/www/test-project",
+    "repositoryUrl": "git://...",
+    "keepReleases": 8,
+    "only": []
+  },
+  "staging": {
+    "servers": [{
+      "host": "39.104.121.122",
+      "username": "deploy"
+    }],
+    "branch": "develop"
   }
 }
