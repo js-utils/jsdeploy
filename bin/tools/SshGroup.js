@@ -42,7 +42,7 @@ module.exports = class SshGroup {
     }
   }
   async softLink (realPath, softLinkPath) {
-    let softLinkCommand = ` ln -snf ${realPath} ${softLinkPath}`
+    let softLinkCommand = `ln -snf ${realPath} ${softLinkPath}`
     for (let ssh of this.connects) {
       console.log(`server ${ ssh.connection.config.host }: ${softLinkCommand}`)
       await ssh.execCommand(`${softLinkCommand}`)

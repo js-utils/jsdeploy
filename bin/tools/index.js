@@ -6,7 +6,6 @@ const deployConfigFilePath = path.resolve(process.cwd(), 'deploy.config.json')
 const readWriteFile = require('./readWriteFile')
 const globalVars = require('./libs/globalVars')
 const SshGroup = require('./SshGroup')
-const archive = require('./archive')
 const deployConfig = fse.readJsonSync(deployConfigFilePath)
 const workerspacePath = path.resolve(globalVars.homedir, '.jsdeploy')
 const projectName = path.basename(deployConfig['default']['repositoryUrl']).replace('.git', '')
@@ -32,6 +31,5 @@ module.exports = {
   deployConfigFilePath,
   deployConfig,
   readWriteFile,
-  SshGroup,
-  archive
+  SshGroup
 }

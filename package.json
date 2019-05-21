@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/wuyuedefeng/jsdeploy#readme",
   "dependencies": {
-    "archiver": "^3.0.0",
     "chalk": "^2.4.2",
     "commander": "^2.20.0",
     "fs-extra": "^8.0.1",
@@ -27,7 +26,6 @@
     "nunjucks": "^3.2.0",
     "promptly": "^3.0.3",
     "shelljs": "^0.8.3",
-    "snake-utils": "0.0.15",
-    "tmp-promise": "^1.1.0"
+    "snake-utils": "0.0.15"
   }
 }

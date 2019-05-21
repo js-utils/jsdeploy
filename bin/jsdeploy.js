@@ -20,4 +20,9 @@ program.command('deploy').description('config deploy servers')
   .option('-e, --env <env>', 'environment', '')
   .action(require('./actions/deploy'));
 
+// rollback
+program.command('rollback').description('rollback deploy')
+  .option('-e, --env <env>', 'environment', '')
+  .action(require('./actions/rollback'));
+
 program.parse(process.argv)
