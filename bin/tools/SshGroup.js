@@ -32,6 +32,22 @@ module.exports = class SshGroup {
       await ssh.putFiles([{ local: localFile, remote: remoteFile }])
     }
   }
+  async unArchiveFile (remoteFile, toPath) {
+    let unArchiveCommand = `tar -zxvf ${remoteFile} -C ${toPath}`
+    for (let ssh of this.connects) {
+      console.log(`server ${ ssh.connection.config.host }: unArchive ${remoteFile} to ${toPath}`)
+      console.log(`command: ${unArchiveCommand}`)
+      await ssh.execCommand(`mkdir ${toPath}`)
+      await ssh.execCommand(`${unArchiveCommand}`)
+    }
+  }
+  async softLink (realPath, softLinkPath) {
+    let softLinkCommand = ` ln -snf ${realPath} ${softLinkPath}`
+    for (let ssh of this.connects) {
+      console.log(`server ${ ssh.connection.config.host }: ${softLinkCommand}`)
+      await ssh.execCommand(`${softLinkCommand}`)
+    }
+  }
   async close () {
     for (let ssh of this.connects) {
       await ssh.connection.end()
