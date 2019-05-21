@@ -55,6 +55,29 @@ module.exports = async function (cmd) {
       return
     }
   }
+
+  console.log('archive deploy files')
+
+  let archiveRootPath = tools.projectSourcePath
+  console.log(deployConfig['default']['archive'])
+  if (deployConfig['default']['archive']['rootDir']) {
+    archiveRootPath = tools.resolve(archiveRootPath, deployConfig['default']['archive']['rootDir'])
+  }
+
+  console.log(`Archive root path: ${archiveRootPath}`)
+  shell.cd(archiveRootPath);
+  console.log(`Begin Archive file`)
+  let buildToPath = tools.resolve(tools.projectPath, 'build.tar.gz')
+  // await tools.archive(archivePaths, buildToPath)
+  if (shell.exec(`tar -zcvf ${buildToPath} ${deployConfig['default']['archive']['only'].join(' ')}`).code !== 0) {
+    shell.echo('Error: archive file error')
+    shell.exit(1)
+    return
+  }
+
+  console.log(`--- Archive file to: ${buildToPath} ---`)
+
+
   console.log('--- Success Build ---')
 
 

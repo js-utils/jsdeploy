@@ -3,7 +3,10 @@
     "deployTo": "/mnt/www/test-project",
     "repositoryUrl": "http://code.lxkee.com/ns.liu/alumni-association-client",
     "keepReleases": 8,
-    "only": ["dist"],
+    "archive": {
+      "rootDir": "dist",
+      "only": ["*"]
+    },
     "shared": {
       "dirs": ["node_modules"],
       "files": []

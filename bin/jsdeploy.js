@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('snake-utils')
 const commander = require('commander')
 const program = new commander.Command()
 const pkg = require('../package.json')
