@@ -1,9 +1,15 @@
 const chalk = require('chalk')
 const fs = require('fs')
 const fse = require('fs-extra')
+const shell = require('shelljs');
 const tools = require('../tools')
 module.exports = async function (cmd) {
   const deployConfig = tools.deployConfig
+  if (!cmd.env || !deployConfig[cmd.env]) {
+    console.log('Please ensure your deploy env is effective')
+    shell.exit(1);
+    return
+  }
 
   // Local Config
   console.log('Local Config')

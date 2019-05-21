@@ -1,8 +1,8 @@
 {
   "default": {
-    "deployTo": "/mnt/www/test-project",
-    "repositoryUrl": "http://code.lxkee.com/ns.liu/alumni-association-client",
-    "keepReleases": 8,
+    "deployTo": "/remote/deploypath",
+    "repositoryUrl": "git:// or http://git...",
+    "keepReleases": 10,
     "archive": {
       "rootDir": "dist",
       "only": ["*"]
