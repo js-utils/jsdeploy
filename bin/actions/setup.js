@@ -1,10 +1,46 @@
 const chalk = require('chalk')
+const fs = require('fs')
 const fse = require('fs-extra')
-const tmp = require('tmp-promise')
 const tools = require('../tools')
-module.exports = async function (_, cmd) {
+module.exports = async function (cmd) {
   const deployConfig = tools.deployConfig
 
+  // Local Config
+  console.log('Local Config')
+  fse.mkdirpSync(tools.projectSourcePath)
+
+  // 创建共享文件夹
+  let sharedDirs = deployConfig['default']['shared']['dirs']
+  if (Array.isArray(sharedDirs)) {
+    for (let folderName of sharedDirs) {
+      let folderPath = tools.resolve(tools.projectSharedPath, folderName)
+      if (!fs.existsSync(folderPath)) {
+        console.log(`Create folder ${folderPath}`)
+        fse.mkdirpSync(folderPath)
+        // console.log(`create soft link ${tools.resolve(tools.projectSourcePath, folderName)} -> ${folderPath}`)
+        // fse.ensureSymlinkSync(folderPath, tools.resolve(tools.projectSourcePath, folderName))
+      }
+    }
+  }
+  // 创建共享文件
+  let sharedFiles = deployConfig['default']['shared']['files']
+  if (Array.isArray(sharedFiles)) {
+    for (let fileName of sharedFiles) {
+      let filePath = tools.resolve(tools.projectSharedPath, fileName)
+      if (!fs.existsSync(fileName)) {
+        console.log(`Create file: ${filePath}`)
+        fse.outputFileSync(filePath, '')
+        // console.log(`Create soft link ${tools.resolve(tools.projectSourcePath, fileName)} -> ${filePath}`)
+        // fse.ensureSymlinkSync(filePath, tools.resolve(tools.projectSourcePath, fileName))
+        console.log(`=== Please config the share file: ${filePath} ===`)
+      }
+
+    }
+  }
+
+
+  // Server Config
+  console.log('Server Config')
   let serverConfig = Object.keys(deployConfig).filter(key => ['default'].indexOf(key) === -1)
   if (cmd.env) {
     serverConfig = serverConfig.filter(key => key === cmd.env )

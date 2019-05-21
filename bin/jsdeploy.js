@@ -6,8 +6,17 @@ const pkg = require('../package.json')
 program.version(pkg.version, '-v, --version')
 // init
 program.command('init').description('init deploy config').action(require('./actions/init'));
-program.command('setup [env]').description('config deploy servers')
+// setup
+program.command('setup').description('config deploy servers')
   .option('-e, --env <env>', 'environment', '')
   .action(require('./actions/setup'));
+// setup
+program.command('build').description('build code')
+  .option('-e, --env <env>', 'environment', '')
+  .action(require('./actions/build'));
+// deploy
+program.command('deploy').description('config deploy servers')
+  .option('-e, --env <env>', 'environment', '')
+  .action(require('./actions/deploy'));
 
 program.parse(process.argv)

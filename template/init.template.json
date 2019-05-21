@@ -1,10 +1,14 @@
 {
   "default": {
-    "workspace": "your local project clone path [if not config will use tmp path every time]",
     "deployTo": "/mnt/www/test-project",
-    "repositoryUrl": "git://...",
+    "repositoryUrl": "http://code.lxkee.com/ns.liu/alumni-association-client",
     "keepReleases": 8,
-    "only": []
+    "only": ["dist"],
+    "shared": {
+      "dirs": ["node_modules"],
+      "files": []
+    },
+    "buildCommands": ["cnpm install", "cnpm run build"]
   },
   "staging": {
     "servers": [{
