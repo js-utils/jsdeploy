@@ -10,6 +10,9 @@ module.exports = async function (cmd) {
     shell.exit(1);
     return
   }
+  // 移除打包文件
+  fse.removeSync(tools.archiveBuildPath)
+
   const envConfig = deployConfig[cmd.env]
   const buildCommands = envConfig['buildCommands'] || deployConfig['default']['buildCommands'] || []
   console.log(buildCommands)
@@ -56,26 +59,16 @@ module.exports = async function (cmd) {
     }
   }
 
-  console.log('archive deploy files')
-
-  let archiveRootPath = tools.projectSourcePath
-  console.log(deployConfig['default']['archive'])
-  if (deployConfig['default']['archive']['rootDir']) {
-    archiveRootPath = tools.resolve(archiveRootPath, deployConfig['default']['archive']['rootDir'])
-  }
-
-  console.log(`Archive root path: ${archiveRootPath}`)
-  shell.cd(archiveRootPath);
-  console.log(`Begin Archive file`)
-  let buildToPath = tools.resolve(tools.projectPath, 'build.tar.gz')
-  // await tools.archive(archivePaths, buildToPath)
-  if (shell.exec(`tar -zcvf ${buildToPath} ${deployConfig['default']['archive']['only'].join(' ')}`).code !== 0) {
+  console.log(`--- Archive file to: ${tools.archiveBuildPath} ---`)
+  console.log(`command: cd ${tools.archiveRootPath}`)
+  shell.cd(tools.archiveRootPath);
+  let archiveCommand = `tar -zcvf ${tools.archiveBuildPath} ${deployConfig['default']['archive']['only'].join(' ')}`
+  console.log(`command: ${archiveCommand}`)
+  if (shell.exec(archiveCommand).code !== 0) {
     shell.echo('Error: archive file error')
     shell.exit(1)
     return
   }
-
-  console.log(`--- Archive file to: ${buildToPath} ---`)
 
 
   console.log('--- Success Build ---')

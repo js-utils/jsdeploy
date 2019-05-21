@@ -13,6 +13,11 @@ const projectName = path.basename(deployConfig['default']['repositoryUrl']).repl
 const projectPath = path.resolve(workerspacePath, projectName)
 const projectSourcePath = path.resolve(projectPath, 'source')
 const projectSharedPath = path.resolve(projectPath, 'shared')
+let archiveRootPath = projectSourcePath
+if (deployConfig['default']['archive']['rootDir']) {
+  archiveRootPath = path.resolve(archiveRootPath, deployConfig['default']['archive']['rootDir'])
+}
+let archiveBuildPath = path.resolve(projectPath, 'build.tar.gz')
 module.exports = {
   resolve: path.resolve.bind(path),
   templatePath,
@@ -20,6 +25,8 @@ module.exports = {
   workerspacePath,
   projectName,
   projectPath,
+  archiveRootPath,
+  archiveBuildPath,
   projectSourcePath,
   projectSharedPath,
   deployConfigFilePath,

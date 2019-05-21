@@ -2,20 +2,24 @@ const chalk = require('chalk')
 const fse = require('fs-extra')
 const tools = require('../tools')
 const shell = require('shelljs');
-module.exports = async function (_, cmd) {
+module.exports = async function (cmd) {
   const deployConfig = tools.deployConfig
-  let serverConfig = Object.keys(deployConfig).filter(key => ['default'].indexOf(key) === -1)
-
-  fse.mkdirpSync(tools.resolve(tools.workerspacePath, 'source'))
-  fse.mkdirpSync(tools.resolve(tools.workerspacePath, 'shared'))
-
-
-  if (shell.exec('git commit -am "Auto-commit"').code !== 0) {
-    shell.echo('Error: Git commit failed')
+  if (!cmd.env || !deployConfig[cmd.env]) {
+    console.log('Please ensure your deploy env is effective')
     shell.exit(1);
+    return
   }
 
-  // 1. 克隆代码
+  let sshGroup = new tools.SshGroup(deployConfig[cmd.env]['servers'])
+  await sshGroup.connect()
+  let deployTo = deployConfig['default']['deployTo']
+
+  console.log('local', tools.archiveBuildPath, tools.resolve(deployTo, 'tmp', 'build.tar.gz'))
+
+  await sshGroup.putFile(tools.archiveBuildPath, tools.resolve(deployTo, 'tmp', 'build.tar.gz'))
+  console.log('--- Upload Finished ---')
+
+  await sshGroup.close()
 
 
   // if (cmd.env) {

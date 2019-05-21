@@ -26,6 +26,12 @@ module.exports = class SshGroup {
       await ssh.mkdir(remotePath)
     }
   }
+  async putFile (localFile, remoteFile) {
+    for (let ssh of this.connects) {
+      console.log(`server ${ ssh.connection.config.host }: putFile ${remoteFile}`)
+      await ssh.putFiles([{ local: localFile, remote: remoteFile }])
+    }
+  }
   async close () {
     for (let ssh of this.connects) {
       await ssh.connection.end()
