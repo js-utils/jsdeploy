@@ -62,4 +62,6 @@ module.exports = async function (cmd) {
     await sshGroup.mkdir(tools.resolve(deployTo, 'tmp'))
     await sshGroup.close()
   }
+
+  console.log(chalk.blue(`---  Setup Success ---`))
 }

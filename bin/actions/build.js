@@ -6,7 +6,7 @@ const shell = require('shelljs');
 module.exports = async function (cmd) {
   const deployConfig = tools.deployConfig
   if (!cmd.env || !deployConfig[cmd.env]) {
-    console.log('Please ensure your deploy env is effective')
+    console.log(chalk.red(`Please ensure your deploy env is effective eg: jsdeploy build -e staging`))
     shell.exit(1);
     return
   }
@@ -14,6 +14,7 @@ module.exports = async function (cmd) {
   fse.removeSync(tools.archiveBuildPath)
 
   const envConfig = deployConfig[cmd.env]
+  const installCommand = envConfig['installCommand'] || deployConfig['default']['installCommand'] || "npm install"
   const buildCommands = envConfig['buildCommands'] || deployConfig['default']['buildCommands'] || []
   console.log(buildCommands)
 
@@ -21,13 +22,15 @@ module.exports = async function (cmd) {
   fse.emptyDirSync(tools.projectSourcePath)
 
   shell.cd(tools.projectSourcePath);
-  console.log(`--- Clone code ---`)
+  console.log(chalk.blue(`--- Clone code ---`))
   if (shell.exec(`git clone -b ${deployConfig[cmd.env]['branch']} ${deployConfig['default']['repositoryUrl']} ./`).code !== 0) {
     shell.echo('Error: Git commit failed')
     shell.exit(1);
     return
   }
-  console.log(`--- Clone code to ${tools.projectSourcePath} success, branch: ${deployConfig[cmd.env]['branch']} ---`)
+
+  console.log(`--- Clone code to ${tools.projectSourcePath} success`)
+  console.log(chalk.green(`=== git branch: ${deployConfig[cmd.env]['branch']} ===`))
 
   // 软连接 到 共享文件夹
   let sharedDirs = deployConfig['default']['shared']['dirs']
@@ -48,10 +51,26 @@ module.exports = async function (cmd) {
     }
   }
 
-  console.log('--- Begin Build ---')
+  console.log(chalk.blue(`Run installCommand: ${installCommand}`))
+  if (shell.exec(`${installCommand}`).code !== 0) {
+    shell.echo(`Run: ${command} Error`)
+    shell.exit(1);
+    return
+  } else { // 成功
+    if (sharedDirs.indexOf('node_modules') !== -1) {
+      // 移除node_modules软连接
+      shell.echo(`--- remove node_modules soft link`)
+      fse.removeSync(tools.resolve(tools.projectSourcePath, 'node_modules'))
+      // 拷贝node_modules文件到项目目录
+      shell.echo(`--- copy share node_modules to project`)
+      fse.copySync(tools.resolve(tools.projectSharedPath, 'node_modules'), tools.resolve(tools.projectSourcePath, 'node_modules'))
+    }
+  }
+
+  console.log(chalk.blue(`--- Begin Build ---`))
   shell.cd(tools.projectSourcePath);
   for (let command of buildCommands) {
-    console.log(`Run: ${command}`)
+    console.log(chalk.blue(`Run buildCommands: ${command}`))
     if (shell.exec(`${command}`).code !== 0) {
       shell.echo(`Run: ${command} Error`)
       shell.exit(1);
@@ -70,8 +89,7 @@ module.exports = async function (cmd) {
     return
   }
 
-
-  console.log('--- Success Build ---')
+  console.log(chalk.blue(`--- Success Build ---`))
 
 
 

@@ -5,7 +5,7 @@ const shell = require('shelljs');
 module.exports = async function (cmd) {
   const deployConfig = tools.deployConfig
   if (!cmd.env || !deployConfig[cmd.env]) {
-    console.log('Please ensure your deploy env is effective')
+    console.log(chalk.red(`Please ensure your deploy env is effective eg: jsdeploy deploy -e staging`))
     shell.exit(1);
     return
   }
@@ -19,40 +19,41 @@ module.exports = async function (cmd) {
 
   console.log('local', tools.archiveBuildPath, deployToTmp)
 
-  console.log('--- Begin Upload ---')
+  console.log(chalk.blue(`--- Begin Upload ---`))
   await sshGroup.putFile(tools.archiveBuildPath, deployToTmp)
-  console.log('--- Upload Finished ---')
+  // console.log('--- Upload Finished ---')
 
-  console.log('--- Begin UnArchive --- ')
+  console.log(chalk.blue(`--- Begin UnArchive --`))
   await sshGroup.unArchiveFile(deployToTmp, deployToReleases)
-  console.log('--- UnArchive Finished ---')
+  // console.log('--- UnArchive Finished ---')
 
-  console.log('--- Begin soft link --- ')
+  console.log(chalk.blue(`--- Begin soft link ---`))
   await sshGroup.softLink(deployToReleases, tools.resolve(deployTo, 'current'))
-  console.log('--- Soft link Finished ---')
+  // console.log('--- Soft link Finished ---')
 
   let keepReleases = deployConfig['default']['keepReleases'] || 10
   console.log(`Keep tmp most ${keepReleases}`)
   for (let ssh of sshGroup.connects) {
     // tmp folder
     let tmpCommand = `ls -lt | awk '{if(NR>${keepReleases+1}){print "rm -f "$9}}' | sh`
-    console.log(`server ${ ssh.connection.config.host }: ${tmpCommand}`)
+    console.log(chalk.yellow(`server ${ ssh.connection.config.host }: ${tmpCommand}`))
     await ssh.execCommand(`${tmpCommand}`, { cwd: tools.resolve(deployTo, 'tmp') }).then(function(result) {
       console.log('STDOUT: ' + result.stdout)
       console.log('STDERR: ' + result.stderr)
     })
     // released folder
     let releasesCommand = `ls -lt | awk '{if(NR>${keepReleases+1}){print "rm -rf "$9}}' | sh`
-    console.log(`server ${ ssh.connection.config.host }: ${releasesCommand}`)
+    console.log(chalk.yellow(`server ${ ssh.connection.config.host }: ${releasesCommand}`))
     await ssh.execCommand(`${releasesCommand}`, { cwd: tools.resolve(deployTo, 'releases') }).then(function(result) {
       console.log('STDOUT: ' + result.stdout)
       console.log('STDERR: ' + result.stderr)
     })
   }
 
-  console.log('=== Deploy Finished ===')
-
   await sshGroup.close()
+
+
+  console.log(chalk.blue(`--- Deploy Success ---`))
 
 
   // if (cmd.env) {

@@ -5,7 +5,7 @@ const shell = require('shelljs');
 module.exports = async function (cmd) {
   const deployConfig = tools.deployConfig
   if (!cmd.env || !deployConfig[cmd.env]) {
-    console.log('Please ensure your deploy env is effective')
+    console.log(chalk.red(`Please ensure your deploy env is effective eg: jsdeploy rollback -e staging`))
     shell.exit(1);
     return
   }
@@ -22,10 +22,10 @@ module.exports = async function (cmd) {
     console.log(`server ${ ssh.connection.config.host }: ${softLinkCommand}`)
     await ssh.execCommand(`${softLinkCommand}`, { cwd: tools.resolve(deployTo, 'releases') })
   }
-
-  console.log('=== rollback Finished ===')
-
   await sshGroup.close()
+
+  console.log(chalk.blue(`---  Rollback Success ---`))
+
 
 
   // if (cmd.env) {
