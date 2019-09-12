@@ -11,7 +11,7 @@ program.command('init').description('init deploy config').action(require('./acti
 program.command('setup').description('config deploy servers')
   .option('-e, --env <env>', 'environment', '')
   .action(require('./actions/setup'));
-// setup
+// build
 program.command('build').description('build code')
   .option('-e, --env <env>', 'environment', '')
   .action(require('./actions/build'));
@@ -24,5 +24,8 @@ program.command('deploy').description('config deploy servers')
 program.command('rollback').description('rollback deploy')
   .option('-e, --env <env>', 'environment', '')
   .action(require('./actions/rollback'));
+
+// clean
+program.command('clean').description('clean local build folders').action(require('./actions/clean'));
 
 program.parse(process.argv)
