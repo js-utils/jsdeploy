@@ -37,8 +37,8 @@ module.exports = async function (cmd) {
   if (Array.isArray(sharedDirs)) {
     for (let folderName of sharedDirs) {
       let folderPath = tools.resolve(tools.projectSharedPath, folderName)
-      console.log(`create soft link ${tools.resolve(tools.projectSourcePath, folderName)} -> ${folderPath}`)
-      fse.ensureSymlinkSync(folderPath, tools.resolve(tools.projectSourcePath, folderName))
+      console.log(`create soft link ${folderPath} -> ${tools.resolve(tools.projectSourcePath, folderName)}`)
+      fse.ensureSymlinkSync(folderPath, tools.resolve(tools.projectSourcePath, folderName), 'dir')
     }
   }
   // 软连接 到 共享文件
@@ -57,14 +57,14 @@ module.exports = async function (cmd) {
     shell.exit(1);
     return
   } else { // 成功
-    if (sharedDirs.indexOf('node_modules') !== -1) {
-      // 移除node_modules软连接
-      shell.echo(`--- remove node_modules soft link`)
-      fse.removeSync(tools.resolve(tools.projectSourcePath, 'node_modules'))
-      // 拷贝node_modules文件到项目目录
-      shell.echo(`--- copy share node_modules to project`)
-      fse.copySync(tools.resolve(tools.projectSharedPath, 'node_modules'), tools.resolve(tools.projectSourcePath, 'node_modules'))
-    }
+    // if (sharedDirs.indexOf('node_modules') !== -1) {
+    //   // 移除node_modules软连接
+    //   shell.echo(`--- remove node_modules soft link`)
+    //   fse.removeSync(tools.resolve(tools.projectSourcePath, 'node_modules'))
+    //   // 拷贝node_modules文件到项目目录
+    //   shell.echo(`--- copy share node_modules to project`)
+    //   fse.copySync(tools.resolve(tools.projectSharedPath, 'node_modules'), tools.resolve(tools.projectSourcePath, 'node_modules'))
+    // }
   }
 
   console.log(chalk.blue(`--- Begin Build ---`))
