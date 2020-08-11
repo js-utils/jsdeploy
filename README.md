@@ -19,3 +19,12 @@ $ jsdeploy rollback -e staging
 # 清理本地部署临时文件
 $ jsdeploy clean
 ```
+
+### 如无需回滚功能
+```json
+{
+  "scripts": {
+    "deploy-prod": "npm run build && scp -r ./dist/* deploy@120.77.252.**:/mnt/www/huobi/huobi-admin"
+  }
+}
+```
